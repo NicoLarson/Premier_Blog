@@ -4,12 +4,27 @@ namespace App\Entity;
 
 use App\Repository\AccountsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AccountsRepository::class)
+ * @UniqueEntity(fields={"email"}, message="Cette email est déjà utilisé.")
+ * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur est déjà utilisé.")
  */
-class Accounts
+class Accounts implements UserInterface
 {
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
+    }
+    public function getSalt()
+    {
+    }
+    public function eraseCredentials()
+    {
+    }
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -29,8 +44,11 @@ class Accounts
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\EqualTo(propertyPath="confirmPassword", message="Les mots de passe entrés ne correspondent pas")
      */
     private $password;
+
+    public $confirmPassword;
 
     /**
      * @ORM\Column(type="string", length=45, nullable=true)

@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\Accounts;
+use App\Entity\Account;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Accounts|null find($id, $lockMode = null, $lockVersion = null)
- * @method Accounts|null findOneBy(array $criteria, array $orderBy = null)
- * @method Accounts[]    findAll()
- * @method Accounts[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Account|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Account|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Account[]    findAll()
+ * @method Account[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AccountsRepository extends ServiceEntityRepository
+class AccountRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Accounts::class);
+        parent::__construct($registry, Account::class);
     }
 
     // /**

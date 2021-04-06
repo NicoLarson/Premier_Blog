@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home
+{% endblock %}
+
+{% block body %}
+
+	<section class="articles">
+		{% for article in articles %}
+			<article>
+				<h2>{{article.title}}</h2>
+				<h3>{{article.capon}}</h3>
+				<p>
+					{% if article.lastUpdateDate == null %}
+						Création le
+						{{article.creationDate | date('d/m/y')}}
+						à
+						{{article.creationDate | date('H:i')}}
+					{% else %}
+						Mise à jour le
+						{{article.lastUpdateDate | date('d/m/y')}}
+						à
+						{{article.updateDate | date('H:i')}}
+					{% endif %}
+				</p>
+				<a href="{{ path("blog", {'title':article.title}) }}" class="btn btn-primary">Lire l'article</a>
+			</article>
+		{% endfor %}
+	</section>
+
+
+{% endblock %}

@@ -36,4 +36,25 @@ class BlogController extends AbstractController
             'articles' => $articleRepository->findAll(),
         ]);
     }
+
+    #[Route('/createArticle', name: 'createArticle')]
+    public function formArticle(Request $request, EntityManagerInterface $manager): Response
+    {
+        $form = $this->createForm(ArticleCreateType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ArticleCreate $articleDTO */
+            $articleDTO = $form->getData();
+            $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content);
+            $manager->persist($article);
+            $manager->flush();
+
+            return $this->redirectToRoute('showArticles');
+        }
+
+        return $this->render('blog/articleCreate.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }

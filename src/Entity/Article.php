@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -60,6 +61,7 @@ class Article
         $this->title = $title;
         $this->capon = $capon;
         $this->content = $content;
+        $this->creationDate = new DateTimeImmutable();
     }
 
     public function getId(): ?int

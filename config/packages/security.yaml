@@ -5,7 +5,10 @@ security:
       algorithm: auto
   providers:
     users_in_memory: { memory: null }
-   
+    account_provider:
+            entity:
+                class: App\Entity\Accounts
+                property: email
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -13,9 +16,11 @@ security:
     main:
       anonymous: true
       lazy: true
+
+      provider: account_provider
       guard:
         authenticators:
-          - App\Security\LoginAuthentificatorAuthenticator
+          - App\Security\LoginAuthenticator
       logout:
         path: app_logout
         # where to redirect after logout

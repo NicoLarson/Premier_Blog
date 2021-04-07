@@ -1,22 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Repository\AccountsRepository;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 /**
  * @ORM\Entity(repositoryClass=AccountsRepository::class)
- * @UniqueEntity(fields={"email"}, message="Cette email est déjà utilisé.")
- * @UniqueEntity(fields={"username"}, message="Ce nom d'utilisateur est déjà utilisé.")
  */
 class Account implements UserInterface
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,10 +30,8 @@ class Account implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\EqualTo(propertyPath="confirmPassword", message="Les mots de passe entrés ne correspondent pas")
      */
     private string $password;
-
 
     /**
      * @ORM\Column(type="simple_array")
@@ -54,27 +46,24 @@ class Account implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private ?string $token = null;
+    private string $token;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="datetime")
      */
-    private string $tokenCreateAt;
+    private \DateTimeInterface $tokenCreateAt;
 
     /**
-     * @ORM\Column(type="bool")
+     * @ORM\Column(type="boolean")
      */
-    private bool $enabled;
-
-
-
-
+    private bool $enabled = false;
 
     public function __construct(string $email, string $username, string $password)
     {
         $this->email = $email;
         $this->username = $username;
         $this->password = $password;
+        $this->generateToken();
     }
 
     public function getRoles()
@@ -82,11 +71,11 @@ class Account implements UserInterface
         return $this->roles;
     }
 
-    public function getSalt()
+    public function getSalt(): void
     {
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
@@ -150,7 +139,7 @@ class Account implements UserInterface
 
     public function setComments(object $comments): self
     {
-        $this->type = $comments;
+        $this->comments = $comments;
 
         return $this;
     }
@@ -160,23 +149,17 @@ class Account implements UserInterface
         return $this->token;
     }
 
-    public function setToken(string $token): self
+    public function generateToken(): string
     {
-        $this->type = $token;
+        $this->token = \bin2hex(\random_bytes(12));
+        $this->tokenCreateAt = new \DateTime();
 
-        return $this;
+        return $this->token;
     }
 
-    public function getTokenCreateAt(): string
+    public function getTokenCreateAt(): \DateTimeInterface
     {
         return $this->tokenCreateAt;
-    }
-
-    public function setTokenCreateAt(string $tokenCreateAt): self
-    {
-        $this->type = $tokenCreateAt;
-
-        return $this;
     }
 
     public function getEnabled(): bool
@@ -186,7 +169,7 @@ class Account implements UserInterface
 
     public function setEnabled(bool $enabled): self
     {
-        $this->type = $enabled;
+        $this->enabled = $enabled;
 
         return $this;
     }

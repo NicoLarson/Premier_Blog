@@ -1,13 +1,13 @@
 security:
   # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
   encoders:
-    App\Entity\Accounts:
+    App\Entity\Account:
       algorithm: auto
   providers:
     users_in_memory: { memory: null }
     account_provider:
             entity:
-                class: App\Entity\Accounts
+                class: App\Entity\Account
                 property: email
   firewalls:
     dev:

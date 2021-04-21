@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +21,6 @@ class BlogController extends AbstractController
     #[Route('/', name: 'home')]
     public function home()
     {
-        return $this->render('blog/home.html.twig',['title' => "Mon super blog!"]);
+        return $this->render('blog/home.html.twig');
     }
 }

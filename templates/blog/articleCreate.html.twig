@@ -18,7 +18,7 @@
 
 			{{ form_row(form.capon, {
         'label': 'Chapon',
-		'attr': {
+        'attr': {
           'placeholder':'Sous-titre de l\'article'
     }}) }}
 
@@ -31,6 +31,7 @@
 		<button class="btn btn-primary" type="submit">
 			Crée un article
 		</button>
+	</fieldset>
+	{{ form_end(form) }}
 
-		{{ form_end(form) }}
-	{% endblock %}
+{% endblock %}

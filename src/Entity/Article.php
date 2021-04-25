@@ -56,12 +56,13 @@ class Article
      */
     private array $comments = [];
 
-    public function __construct(string $title, string $capon, string $content)
+    public function __construct(string $title, string $capon, string $content, string $author)
     {
         $this->title = $title;
         $this->capon = $capon;
         $this->content = $content;
         $this->creationDate = new DateTimeImmutable();
+        $this->author = $author;
     }
 
     public function getId(): ?int

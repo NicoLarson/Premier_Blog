@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class BlogController extends AbstractController
 {
@@ -38,15 +39,16 @@ class BlogController extends AbstractController
     }
 
     #[Route('/createArticle', name: 'createArticle')]
-    public function formArticle(Request $request, EntityManagerInterface $manager): Response
+    public function formArticle(Request $request, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils): Response
     {
+        $lastUsername = $authenticationUtils->getLastUsername();
         $form = $this->createForm(ArticleCreateType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ArticleCreate $articleDTO */
             $articleDTO = $form->getData();
-            $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content);
+            $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content, $lastUsername);
             $manager->persist($article);
             $manager->flush();
 

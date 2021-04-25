@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,9 +34,10 @@ class Article
     private string $capon;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity=Account::class, inversedBy="articles", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
-    private string $author;
+    private Account $author;
 
     /**
      * @ORM\Column(type="datetime")
@@ -52,17 +55,19 @@ class Article
     private string $content;
 
     /**
-     * @ORM\Column(type="array", nullable=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", cascade={"persist"})
+     * @ORM\OrderBy({"creationDate" = "DESC"})
      */
-    private array $comments = [];
+    private Collection $comments;
 
-    public function __construct(string $title, string $capon, string $content, string $author)
+    public function __construct(string $title, string $capon, string $content, Account $author)
     {
         $this->title = $title;
         $this->capon = $capon;
         $this->content = $content;
         $this->creationDate = new DateTimeImmutable();
         $this->author = $author;
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,12 +99,12 @@ class Article
         return $this;
     }
 
-    public function getAuthor()
+    public function getAuthor(): Account
     {
         return $this->author;
     }
 
-    public function setAuthor(string $author): self
+    public function setAuthor(Account $author): self
     {
         $this->author = $author;
 
@@ -142,14 +147,14 @@ class Article
         return $this;
     }
 
-    public function getComments(): ?array
+    public function getComments(): iterable
     {
         return $this->comments;
     }
 
-    public function setComments(?array $comments): self
+    public function setComments(iterable $comments): self
     {
-        $this->comments = $comments;
+        $this->comments = new ArrayCollection($comments instanceof \Traversable ? \iterator_to_array($comments) : $comments);
 
         return $this;
     }

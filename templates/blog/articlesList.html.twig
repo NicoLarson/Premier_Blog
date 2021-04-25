@@ -23,10 +23,9 @@
 						{{article.updateDate | date('H:i')}}
 					{% endif %}
 				</p>
-				<a href="{{ path("blog", {'title':article.title}) }}" class="btn btn-primary">Lire l'article</a>
+				<a href="{{ path("showPost", {'id':article.id}) }}" class="btn btn-primary">Lire l'article</a>
 			</article>
 		{% endfor %}
 	</section>
-
 
 {% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'article
+{% endblock %}
+
+{% block body %}
+	{{ form_start(form) }}
+
+	<fieldset>
+		<legend>Créer un article</legend>
+
+		{{ form_row(form.title, {
+         'label': 'Titre de l\'article',
+         'attr': {
+           'placeholder':'Titre'
+    }
+    }) }}
+
+			{{ form_row(form.capon, {
+        'label': 'Chapon',
+        'attr': {
+          'placeholder':'Sous-titre de l\'article'
+    }}) }}
+
+		{{ form_row(form.content, {
+        'label': 'Contenu de l\'article',
+        'attr':{
+          'placeholder':'Contenu de l\'article'
+    }}) }}
+
+		<button class="btn btn-primary" type="submit">
+			Crée un article
+		</button>
+	</fieldset>
+	{{ form_end(form) }}
+
+{% endblock %}

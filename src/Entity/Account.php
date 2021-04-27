@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\AccountRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=AccountsRepository::class)
+ * @ORM\Entity(repositoryClass=AccountRepository::class)
  */
 class Account implements UserInterface
 {

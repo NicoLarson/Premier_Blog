@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AccountCreate
+/**
+ * @ORM\Entity
+ */
+class ArticleCreate
 {
     /**
      * @Assert\NotBlank
-     * @Assert\Email
      */
-    public $email;
+    public $title;
 
     /**
      * @Assert\NotBlank
      */
-    public $username;
+    public $capon;
 
     /**
      * @Assert\NotBlank
      */
-    public $password;
+    public $content;
 }

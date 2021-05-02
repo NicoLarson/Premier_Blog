@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home
+{% endblock %}
+
+{% block body %}
+
+	<section class="container">
+		<article>
+			<h2>{{article.title}}</h2>
+			<h3>{{article.capon}}</h3>
+			<p>{{article.content}}</p>
+			<p>
+				{% if article.lastUpdateDate == null %}
+					Création le
+					{{article.creationDate | date('d/m/y')}}
+					à
+					{{article.creationDate | date('H:i')}}
+				{% else %}
+					Mise à jour le
+					{{article.lastUpdateDate | date('d/m/y')}}
+					à
+					{{article.updateDate | date('H:i')}}
+				{% endif %}
+				par
+				{{article.author}}
+			</p>
+		</article>
+	</section>
+
+{% endblock %}

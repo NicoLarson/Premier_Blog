@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\AccountRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -41,9 +43,14 @@ class Account implements UserInterface
     private array $roles = ['ROLE_USER'];
 
     /**
-     * @ORM\Column(type="object")
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", cascade={"persist"})
      */
-    private ?object $comments;
+    private Collection $articles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AuthenticateAuthor::class, mappedBy="account", cascade={"persist"})
+     */
+    private Collection $comments;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -66,8 +73,14 @@ class Account implements UserInterface
         $this->username = $username;
         $this->password = $password;
         $this->generateToken();
+        $this->articles = new ArrayCollection();
+        $this->comment = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->username;
+    }
     public function getRoles()
     {
         return $this->roles;

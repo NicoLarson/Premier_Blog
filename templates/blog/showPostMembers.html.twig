@@ -1,0 +1,22 @@
+{% extends 'blog/showPost.html.twig' %}
+
+{% block formBlock %}
+
+	{{ form_start(form) }}
+
+	<fieldset>
+		<legend>Commenter</legend>
+
+		{{ form_row(form.content, {
+        'label': 'Commentaire',
+        'attr':{
+          'placeholder':'Commentaire'
+    }}) }}
+
+		<button class="btn btn-primary" type="submit">
+			Commenter
+		</button>
+	</fieldset>
+	{{ form_end(form) }}
+
+{% endblock %}

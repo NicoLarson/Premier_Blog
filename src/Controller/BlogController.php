@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\CommentAnonymousCreate;
+use App\DTO\InputArticle;
 use App\Entity\Account;
 use App\Entity\AnonymousAuthor;
 use App\Entity\Article;
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class BlogController extends AbstractController
 {
@@ -75,18 +75,16 @@ class BlogController extends AbstractController
     }
 
     #[Route('/createArticle', name: 'createArticle')]
-    public function formArticle(Request $request, EntityManagerInterface $manager, AuthenticationUtils $authenticationUtils): Response
+    public function formArticle(Request $request, EntityManagerInterface $manager): Response
     {
         if (!$this->isGranted('ROLE_USER')) {
             throw $this->createAccessDeniedException();
         }
-
-        $lastUsername = $authenticationUtils->getLastUsername();
         $form = $this->createForm(ArticleCreateType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var ArticleCreate $articleDTO */
+            /** @var InputArticle $articleDTO */
             $articleDTO = $form->getData();
             $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content, $this->getUser());
             $manager->persist($article);
@@ -118,13 +116,55 @@ class BlogController extends AbstractController
         return $this->redirectToRoute('showArticles');
     }
 
+    #[Route('/updateArticle/{id}', name: 'updateArticle')]
+    public function updateArticle($id, Request $request, EntityManagerInterface $manager)
+    {
+        $form = $this->createForm(ArticleCreateType::class);
+        $form->handleRequest($request);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $article = $entityManager->getRepository(Article::class)->find($id);
+
+        $currentUser = $this->getUser();
+
+        if (!$currentUser instanceof Account || $article->getAuthor()->getId() !== $currentUser->getId()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if (!$article) {
+            throw $this->createNotFoundException('No article found for id ' . $id);
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var InputArticle $articleDTO */
+            $articleDTO = $form->getData();
+            $article->setTitle($articleDTO->title)
+                ->setCapon($articleDTO->capon)
+                ->setContent($articleDTO->content)
+                ->setLastUpdateDateNow();
+            $manager->flush();
+
+            return $this->redirectToRoute('showPost', ['id' => $id]);
+        }
+
+        return $this->render('blog/updateArticle.html.twig', [
+            'form' => $form->createView(),
+            'article' => $article,
+        ]);
+    }
+
     #[Route('/show-post/{id}', name: 'showPost')]
     public function showPost($id, Request $request, EntityManagerInterface $manager)
     {
         $repo = $this->getDoctrine()->getRepository(Article::class);
         $article = $repo->find($id);
+        $currentUser = $this->getUser();
+        $currentUserIsAuthor = false;
 
         if (null !== $this->getUser()) {
+            if ($article->getAuthor()->getId() == $currentUser->getId()) {
+                $currentUserIsAuthor = true;
+            }
             $form = $this->createForm(CommentMembersType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -141,6 +181,8 @@ class BlogController extends AbstractController
             return $this->render('blog/showPostMembers.html.twig', [
                 'article' => $article,
                 'form' => $form->createView(),
+                'id' => $id,
+                'currentUserIsAuthor' => $currentUserIsAuthor,
             ]);
         }
         $form = $this->createForm(CommentAnonymousType::class);
@@ -157,8 +199,8 @@ class BlogController extends AbstractController
         }
 
         return $this->render('blog/showPostAnonymous.html.twig', [
-                'article' => $article,
-                'form' => $form->createView(),
-            ]);
+            'article' => $article,
+            'form' => $form->createView(),
+        ]);
     }
 }

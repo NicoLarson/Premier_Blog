@@ -74,12 +74,15 @@ class BlogController extends AbstractController
         ]);
     }
 
-    #[Route('/createArticle', name: 'createArticle')]
+    #[Route('/create-article', name: 'createArticle')]
     public function formArticle(Request $request, EntityManagerInterface $manager): Response
     {
-        if (!$this->isGranted('ROLE_USER')) {
+        $currentUser = $this->getUser();
+
+        if (!$currentUser instanceof Account || !$currentUser->getEnabled()) {
             throw $this->createAccessDeniedException();
         }
+
         $form = $this->createForm(ArticleCreateType::class);
         $form->handleRequest($request);
 
@@ -125,9 +128,10 @@ class BlogController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $article = $entityManager->getRepository(Article::class)->find($id);
 
+        $members = $entityManager->getRepository(Account::class)->findAll();
         $currentUser = $this->getUser();
 
-        if (!$currentUser instanceof Account || $article->getAuthor()->getId() !== $currentUser->getId()) {
+        if (!$currentUser instanceof Account || ($article->getAuthor()->getId() !== $currentUser->getId() && $this->isGranted(['ROLE_ADMIN']))) {
             throw $this->createAccessDeniedException();
         }
 
@@ -138,9 +142,11 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var InputArticle $articleDTO */
             $articleDTO = $form->getData();
+            $author = $entityManager->getRepository(Account::class)->find($articleDTO->authorId);
             $article->setTitle($articleDTO->title)
                 ->setCapon($articleDTO->capon)
                 ->setContent($articleDTO->content)
+                ->setAuthor($author)
                 ->setLastUpdateDateNow();
             $manager->flush();
 
@@ -150,6 +156,7 @@ class BlogController extends AbstractController
         return $this->render('blog/updateArticle.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
+            'members' => $members,
         ]);
     }
 

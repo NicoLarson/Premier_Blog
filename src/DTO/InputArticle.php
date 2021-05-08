@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO;
 
+use App\Entity\Account;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class InputArticle
@@ -41,4 +42,10 @@ class InputArticle
      * )
      */
     public $content;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Type("int")
+     */
+    public $authorId;
 }

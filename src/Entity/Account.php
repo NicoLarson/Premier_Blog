@@ -81,6 +81,7 @@ class Account implements UserInterface
     {
         return $this->username;
     }
+
     public function getRoles()
     {
         return $this->roles;

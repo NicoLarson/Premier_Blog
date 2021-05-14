@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,14 +41,14 @@ class Article
     private Account $author;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
-    private object $creationDate;
+    private DateTimeImmutable $creationDate;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?object $lastUpdateDate;
+    private ?DateTime $lastUpdateDate;
 
     /**
      * @ORM\Column(type="text")
@@ -55,8 +56,8 @@ class Article
     private string $content;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", cascade={"persist"})
-     * @ORM\OrderBy({"creationDate" = "DESC"})
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"creationDate": "DESC"})
      */
     private Collection $comments;
 
@@ -66,6 +67,7 @@ class Article
         $this->capon = $capon;
         $this->content = $content;
         $this->creationDate = new DateTimeImmutable();
+        $this->lastUpdateDate = new DateTime();
         $this->author = $author;
         $this->comments = new ArrayCollection();
     }
@@ -114,13 +116,6 @@ class Article
     public function getCreationDate(): ?DateTimeInterface
     {
         return $this->creationDate;
-    }
-
-    public function setCreationDate(DateTimeInterface $creationDate): self
-    {
-        $this->creationDate = $creationDate;
-
-        return $this;
     }
 
     public function getLastUpdateDate(): ?DateTimeInterface

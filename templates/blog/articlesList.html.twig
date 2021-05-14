@@ -5,13 +5,13 @@
 
 {% block body %}
 
-	<section class="articles">
-		{% for article in articles %}
+	{% for article in articles %}
+		<section class="articles">
 			<article>
 				<h2>{{article.title}}</h2>
 				<h3>{{article.capon}}</h3>
 				<p>
-					{% if article.lastUpdateDate == null %}
+					{% if article.lastUpdateDate == article.creationDate %}
 						Création le
 						{{article.creationDate | date('d/m/y')}}
 						à
@@ -20,12 +20,14 @@
 						Mise à jour le
 						{{article.lastUpdateDate | date('d/m/y')}}
 						à
-						{{article.updateDate | date('H:i')}}
+						{{article.lastUpdateDate | date('H:i')}}
 					{% endif %}
+					par
+					{{article.author}}
 				</p>
 				<a href="{{ path("showPost", {'id':article.id}) }}" class="btn btn-primary">Lire l'article</a>
 			</article>
-		{% endfor %}
-	</section>
+		</section>
+	{% endfor %}
 
 {% endblock %}

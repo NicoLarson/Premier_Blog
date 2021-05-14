@@ -2,6 +2,10 @@
 
 {% block formBlock %}
 
+	<a href="{{ path("deleteArticle", {'id':article.id}) }}" class="btn btn-primary">
+		Supprimer l'article
+	</a>
+
 	{{ form_start(form) }}
 
 	<fieldset>

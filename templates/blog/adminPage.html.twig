@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration
+{% endblock %}
+
+{% block body %}
+
+
+	<section>
+		<h3>Demande inscription</h3>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Login</th>
+					<th scope="col">Role</th>
+					<th scope="col">Validation</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for member in members %}
+					{% if member.enabled == false %}
+						<tr class="table-active">
+							<th scope="row">{{member.username}}</th>
+							{% for role in member.roles %}
+								<td>{{role}}</td>
+							{% endfor %}
+							<td>
+								<a href="{{ path("inscriptionValidation", {'id':member.id}) }}" class="btn btn-success">Valider</a>
+								<a href="{{ path("deleteAccount", {'id':member.id}) }}" class="btn btn-danger">Supprimer</a>
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+			</tbody>
+		</table>
+	</section>
+	<h3>Membres</h3>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Login</th>
+				<th scope="col">Role</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for member in members %}
+				{% if member.enabled != false %}
+					{% for key, role in member.roles %}
+						{% if key == 0 and role != 'ROLE_ADMIN' %}
+							<tr class="table-active">
+								<th scope="row">{{member.username}}</th>
+								<td>{{role}}</td>
+								<td>
+									<a href="{{ path("addAdminRole", {'id':member.id}) }}" class="btn btn-warning">Rendre admin</a>
+									<a href="{{ path("deleteAccount", {'id':member.id}) }}" class="btn btn-danger">Supprimer</a>
+								</td>
+							</tr>
+						{% elseif key == 0 and role == 'ROLE_ADMIN' %}
+							<tr class="table-active">
+								<th scope="row">{{member.username}}</th>
+								<td>{{role}}</td>
+								<td>
+									<a href="{{ path("removeAdminRole", {'id':member.id}) }}" class="btn btn-warning">Enlever les privileges</a>
+								</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+<section>
+	<h3>Articles</h3>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Titre</th>
+				<th scope="col">Autheur</th>
+				<th scope="col">Capon</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in articles %}
+				<tr class="table-active">
+					<th scope="row">{{article.title}}</th>
+					<td>{{article.author}}</td>
+					<td>{{article.capon}}</td>
+					<td>
+						<a href="{{ path("updateArticle", {'id':article.id}) }}" class="btn btn-warning">Modifier</a>
+						<a href="{{ path("deleteArticle", {'id':article.id}) }}" class="btn btn-danger">Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</section>
+<section>
+	<h3>Commentaires à valider</h3>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Nom</th>
+				<th scope="col">Email</th>
+				<th scope="col">Titre de l'article</th>
+				<th scope="col">Commentaires</th>
+				<th scope="col">Validation</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for comment in comments %}
+				{% if comment.enabled == false %}
+					<tr class="table-active">
+						<th scope="row">{{comment.author.username}}</th>
+						<td>{{comment.author.email}}</td>
+						<td>{{comment.article.title}}</td>
+						<td>{{comment.content}}</td>
+						<td>
+							<a href="{{ path("validationComment", {'id':comment.id}) }}" class="btn btn-success">Valider</a>
+							<a href="{{ path("deleteComment", {'id':comment.id}) }}" class="btn btn-danger">Supprimer</a>
+						</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+</section>{% endblock %}

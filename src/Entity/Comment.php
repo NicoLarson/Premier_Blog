@@ -46,6 +46,11 @@ class Comment
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $enabled = false;
+
     public function __construct(Article $article, AbstractAuthor $author, string $content)
     {
         $this->author = $author;
@@ -90,5 +95,17 @@ class Comment
     public function getArticle(): Article
     {
         return $this->article;
+    }
+
+    public function getEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function enable(): self
+    {
+        $this->enabled = true;
+
+        return $this;
     }
 }

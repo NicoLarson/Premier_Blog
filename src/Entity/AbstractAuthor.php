@@ -23,9 +23,14 @@ abstract class AbstractAuthor
 
     /**
      * @ORM\OneToOne(targetEntity=Comment::class, inversedBy="author")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private Comment $comment;
+
+    public function __toString()
+    {
+        return '*'.$this->getUsername().'*';
+    }
 
     public function setComment(Comment $comment): void
     {
@@ -45,9 +50,4 @@ abstract class AbstractAuthor
     abstract public function getUsername(): string;
 
     abstract public function getEmail(): string;
-
-    public function __toString()
-    {
-        return "*" . $this->getUsername() . "*";
-    }
 }

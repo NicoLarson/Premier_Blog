@@ -21,13 +21,13 @@ class Comment
     private ?int $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=AbstractAuthor::class, mappedBy="comment", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity=AbstractAuthor::class, mappedBy="comment", cascade={"persist", "remove"})
      */
     private AbstractAuthor $author;
 
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private Article $article;
 
@@ -85,5 +85,10 @@ class Comment
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getArticle(): Article
+    {
+        return $this->article;
     }
 }

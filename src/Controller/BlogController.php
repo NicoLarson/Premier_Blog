@@ -12,11 +12,14 @@ use App\Form\CommentMembersType;
 use App\Entity\AuthenticateAuthor;
 use App\Form\CommentAnonymousType;
 use App\DTO\CommentAnonymousCreate;
+use App\Form\ContactType;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -32,9 +35,35 @@ class BlogController extends AbstractController
     }
 
     #[Route('/home', name: 'home')]
-    public function home()
+    public function home(Request $request, MailerInterface $mailer): Response
     {
-        return $this->render('blog/home.html.twig');
+        $form = $this->createForm(ContactType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $email = (new Email())
+                ->from($formData->email)
+                ->to('contact@nicolasyang.fr')
+                ->subject('Message du blog!')
+                ->text($formData->message)
+                ->html($this->renderView('mails/contactMe.html.twig', [
+                    'lastName' => $formData->lastName,
+                    'firstName' => $formData->firstName,
+                    'email' => $formData->email,
+                    'message' => $formData->message,
+                ]));
+
+            $mailer->send($email);
+
+            $this->addFlash('success', 'Votre message a été envoyé');
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('blog/home.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/showArticles', name: 'showArticles')]

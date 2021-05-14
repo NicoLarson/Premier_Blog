@@ -1,3 +1,61 @@
-form{
-    margin-top: 8rem;
+/* Reset */
+html {
+  scroll-behavior: smooth;
+}
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+body,
+h1,
+h2,
+h3,
+nav,
+section,
+p,
+ul,
+li,
+div,
+textarea,
+input {
+  margin: 0;
+  padding: 0;
+  font-weight: 100%;
+  list-style: none;
+}
+
+abbr {
+  text-decoration: none;
+}
+
+a {
+  color: #222;
+  text-decoration: none;
+}
+a:focus {
+  text-decoration: underline;
+}
+
+/* Style */
+header img{
+    display: inline-block;
+    height: 1.6em;
+}
+body main .home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+body main .home h1{
+    text-align: center;
+}
+body main .home img{
+    height: 4em;
+}
+form {
+  margin-top: 8rem;
+}
+section, div.home{
+  margin: 4rem 0;
 }

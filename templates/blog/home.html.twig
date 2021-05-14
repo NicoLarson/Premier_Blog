@@ -1,5 +1,61 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+	<div class="home">
+		<h1>Mon premier blog</h1>
+		<h2>Nicolas Yang</h2>
+		<img src="./asset/img/logo_colors.jpg" alt="logo">
+		<p>Eat, Sleep, Code, Repeat!<br/>Doucement mais surement.</p>
 
-<h1>home</h1>
+	</div>
+
+	{{ form_start(form) }}
+	<h3>Me Contacter</h3>
+	{{ form_row(form.lastName, {
+        'label': 'Nom',
+        'attr': {
+        'placeholder':'Votre nom',
+        'class':'form-control'
+    }
+    }) }}{{ form_row(form.firstName, {
+        'label': 'Prénom',
+        'attr': {
+        'placeholder':'Votre prénom',
+        'class':'form-control'
+    }
+    }) }}{{ form_row(form.email, {
+        'label': 'Email','attr': {
+        'placeholder':'Votre email',
+        'class':'form-control'
+    }}) }}{{ form_row(form.message, {
+        'label': 'Votre message',
+        'attr':{
+        'placeholder':'Votre message',
+        'class':'form-control'
+    }}) }}
+
+	<button type="submit" class="btn btn-primary">Envoyer</button>
+	{{ form_end(form) }}
+
+	<section>
+		<h3>Me trouver</h3>
+		<ul itemscope itemtype="https://schema.org/WebPage">
+			<li>
+				<a itemprop="url" href="https://www.linkedin.com/in/nicolas-yang-dev" target="_blank" rel="noopener">
+					<i class="devicon-linkedin-plain" aria-hidden="true"></i>
+					Linkedin</a>
+			</li>
+			<li>
+				<a itemprop="url" href="https://github.com/NicoLarson" target="_blank" rel="noopener">
+					<i class="devicon-github-plain" aria-hidden="true"></i>
+					GitHub</a>
+			</li>
+			<li>
+				<a href="./asset/CV.pdf">
+					<i class="fas fa-file-pdf"></i>
+					Mon CV</a>
+			</li>
+
+
+		</ul>
+	</section>
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier article
+{% endblock %}
+
+{% block body %}
+	{{ form_start(form) }}
+
+	<fieldset>
+		<legend>Modifier
+			{{article.title}}</legend>
+
+		{{ form_row(form.title, {
+         'label': 'Titre de l\'article',
+         'attr': {
+           'value':(article.title)
+    }
+    }) }}
+
+		{{ form_row(form.capon, {
+        'label': 'Chapon',
+        'attr': {
+          'value':(article.capon)
+    }}) }}
+
+		{{ form_row(form.content, {
+        'label': 'Contenu de l\'article',
+        'attr':{
+          'value':(article.content)
+    }}) }}
+
+		<button class="btn btn-primary" type="submit">
+			Modifier
+		</button>
+	</fieldset>
+	{{ form_end(form) }}
+
+{% endblock %}

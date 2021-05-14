@@ -2,25 +2,32 @@
 
 {% block formBlock %}
 
-	<a href="{{ path("deleteArticle", {'id':article.id}) }}" class="btn btn-primary">
-		Supprimer l'article
-	</a>
+{% if currentUserIsAuthor %}
+<a href="{{ path("updateArticle", {'id':article.id}) }}" class="btn btn-primary">
+	Modifier l'article
+</a>
 
-	{{ form_start(form) }}
+<a href="{{ path("deleteArticle", {'id':article.id}) }}" class="btn btn-primary">
+	Supprimer l'article
+</a>
+{% endif %}
 
-	<fieldset>
-		<legend>Commenter</legend>
 
-		{{ form_row(form.content, {
-        'label': 'Commentaire',
-        'attr':{
-          'placeholder':'Commentaire'
-    }}) }}
+{{ form_start(form) }}
 
-		<button class="btn btn-primary" type="submit">
-			Commenter
-		</button>
-	</fieldset>
-	{{ form_end(form) }}
+<fieldset>
+	<legend>Commenter</legend>
+
+	{{ form_row(form.content, {
+	'label': 'Commentaire',
+	'attr':{
+	'placeholder':'Commentaire'
+	}}) }}
+
+	<button class="btn btn-primary" type="submit">
+		Commenter
+	</button>
+</fieldset>
+{{ form_end(form) }}
 
 {% endblock %}

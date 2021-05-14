@@ -46,9 +46,9 @@ class Article
     private DateTimeImmutable $creationDate;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private ?DateTime $lastUpdateDate;
+    private ?DateTimeImmutable $lastUpdateDate;
 
     /**
      * @ORM\Column(type="text")
@@ -122,9 +122,9 @@ class Article
         return $this->lastUpdateDate;
     }
 
-    public function setLastUpdateDate(?DateTimeInterface $lastUpdateDate): self
+    public function setLastUpdateDateNow(): self
     {
-        $this->lastUpdateDate = $lastUpdateDate;
+        $this->lastUpdateDate = new DateTimeImmutable();
 
         return $this;
     }

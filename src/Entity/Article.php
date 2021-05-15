@@ -67,6 +67,7 @@ class Article
         $this->capon = $capon;
         $this->content = $content;
         $this->creationDate = new DateTimeImmutable();
+        $this->lastUpdateDate = $this->creationDate;
         $this->author = $author;
         $this->comments = new ArrayCollection();
     }

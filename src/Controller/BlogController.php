@@ -70,7 +70,7 @@ class BlogController extends AbstractController
     public function showArticles(ArticleRepository $articleRepository)
     {
         return $this->render('blog/articlesList.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articleRepository->findBy(array(), array('lastUpdateDate' => 'DESC')),
         ]);
     }
 

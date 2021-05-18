@@ -11,7 +11,7 @@
 				<h2>{{article.title}}</h2>
 				<h3>{{article.capon}}</h3>
 				<p>
-					{% if article.lastUpdateDate == null %}
+					{% if article.lastUpdateDate == article.creationDate %}
 						Création le
 						{{article.creationDate | date('d/m/y')}}
 						à

@@ -37,9 +37,12 @@ a:focus {
 }
 
 /* Style */
-header img{
-    display: inline-block;
-    height: 1.6em;
+.disable {
+  display: none;
+}
+header img {
+  display: inline-block;
+  height: 1.6em;
 }
 body main .home {
   display: flex;
@@ -47,15 +50,43 @@ body main .home {
   justify-content: center;
   align-items: center;
 }
-body main .home h1{
-    text-align: center;
+body main .home h1 {
+  text-align: center;
 }
-body main .home img{
-    height: 4em;
+body main .home img {
+  height: 4em;
 }
 form {
   margin-top: 8rem;
 }
-section, div.home{
+section,
+div.home {
   margin: 4rem 0;
+}
+article {
+  margin-top: 4rem;
+}
+h4 {
+  margin-top: 4rem;
+}
+footer,
+footer section h3,
+footer section ul li a {
+  padding: 0;
+  background-color: #222;
+  color: #fafafa;
+}
+
+footer {
+  margin-top: 4rem;
+  padding: 2rem;
+}
+footer section {
+  margin: 4rem;
+}
+footer section ul li a:hover {
+  color: #999;
+}
+footer p {
+  text-align: center;
 }

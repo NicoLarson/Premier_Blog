@@ -43,12 +43,12 @@ class Account implements UserInterface
     private array $roles = ['ROLE_USER'];
 
     /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="author", cascade={"persist", "remove"})
      */
     private Collection $articles;
 
     /**
-     * @ORM\OneToMany(targetEntity=AuthenticateAuthor::class, mappedBy="account", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=AuthenticateAuthor::class, mappedBy="account", cascade={"persist", "remove"})
      */
     private Collection $comments;
 
@@ -85,6 +85,16 @@ class Account implements UserInterface
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    public function addAdminRoles(): void
+    {
+        \array_unshift($this->roles, 'ROLE_ADMIN');
+    }
+
+    public function removeAdminRole(): void
+    {
+        \array_shift($this->roles);
     }
 
     public function getSalt(): void
@@ -183,9 +193,11 @@ class Account implements UserInterface
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled): self
+    public function enable(): self
     {
-        $this->enabled = $enabled;
+        \array_unshift($this->roles, 'ROLE_MEMBER');
+        \array_pop($this->roles);
+        $this->enabled = true;
 
         return $this;
     }

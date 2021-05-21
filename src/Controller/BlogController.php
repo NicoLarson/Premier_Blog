@@ -70,7 +70,7 @@ class BlogController extends AbstractController
     public function showArticles(ArticleRepository $articleRepository)
     {
         return $this->render('blog/articlesList.html.twig', [
-            'articles' => $articleRepository->findBy(array(), array('lastUpdateDate' => 'DESC')),
+            'articles' => $articleRepository->findBy([], ['lastUpdateDate' => 'DESC']),
         ]);
     }
 
@@ -82,7 +82,6 @@ class BlogController extends AbstractController
         if (!$currentUser instanceof Account || !$currentUser->getEnabled()) {
             throw $this->createAccessDeniedException();
         }
-
         $form = $this->createForm(ArticleCreateType::class);
         $form->handleRequest($request);
 
@@ -92,6 +91,8 @@ class BlogController extends AbstractController
             $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content, $this->getUser());
             $manager->persist($article);
             $manager->flush();
+
+            $this->addFlash('success', 'Votre article a été ajouté.');
 
             return $this->redirectToRoute('showArticles');
         }
@@ -109,8 +110,10 @@ class BlogController extends AbstractController
 
         $currentUser = $this->getUser();
 
-        if (!$currentUser instanceof Account || $article->getAuthor()->getId() !== $currentUser->getId()) {
-            throw $this->createAccessDeniedException();
+        if ('ADMIN' !== $currentUser->getRoles()[0]) {
+            if (!$currentUser instanceof Account || $article->getAuthor()->getId() !== $currentUser->getId()) {
+                throw $this->createAccessDeniedException();
+            }
         }
 
         $manager->remove($article);
@@ -136,7 +139,7 @@ class BlogController extends AbstractController
         }
 
         if (!$article) {
-            throw $this->createNotFoundException('No article found for id ' . $id);
+            throw $this->createNotFoundException('No article found for id '.$id);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -169,7 +172,7 @@ class BlogController extends AbstractController
         $currentUserIsAuthor = false;
 
         if (null !== $this->getUser()) {
-            if ($article->getAuthor()->getId() == $currentUser->getId()) {
+            if ($article->getAuthor()->getId() === $currentUser->getId()) {
                 $currentUserIsAuthor = true;
             }
             $form = $this->createForm(CommentMembersType::class);
@@ -181,6 +184,7 @@ class BlogController extends AbstractController
                 $comment = new Comment($article, $author, $commentDTO->content);
                 $manager->persist($comment);
                 $manager->flush();
+                $this->addFlash('warning', 'Votre commentaire est en attente pour validation.');
 
                 return $this->redirectToRoute('showPost', ['id' => $id]);
             }

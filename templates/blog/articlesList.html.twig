@@ -22,6 +22,8 @@
 						à
 						{{article.lastUpdateDate | date('H:i')}}
 					{% endif %}
+					par
+				{{article.author}}
 				</p>
 				<a href="{{ path("showPost", {'id':article.id}) }}" class="btn btn-primary">Lire l'article</a>
 			</article>

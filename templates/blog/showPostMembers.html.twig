@@ -1,7 +1,6 @@
 {% extends 'blog/showPost.html.twig' %}
 
 {% block formBlock %}
-
 	{% if currentUserIsAuthor or is_granted('ROLE_ADMIN') %}
 		<a href="{{ path("updateArticle", {'id':article.id}) }}" class="btn btn-primary">
 			Modifier l'article
@@ -12,9 +11,7 @@
 		</a>
 	{% endif %}
 
-
 	{{ form_start(form) }}
-
 	<fieldset>
 		<legend>Commenter</legend>
 
@@ -23,10 +20,8 @@
 	'attr':{
 	'placeholder':'Commentaire'
 	}}) }}
-
 		<button class="btn btn-primary" type="submit">
-			Commenter
-		</button>
+			Commenter</button>
 	</fieldset>
 	{{ form_end(form) }}
 {% endblock %}

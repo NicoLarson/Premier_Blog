@@ -30,11 +30,11 @@
 	{% block formBlock %}{% endblock %}
 
 	{% for comment in article.comments %}
-
-		<h4>{{comment.author}}</h4>
-		<p>{{comment.content}}</p>
-		<p>{{comment.creationDate | date('d/m/y H:i')}}</p>
-
+		{% if comment.enabled == true %}
+			<h4>{{comment.author}}</h4>
+			<p>{{comment.content}}</p>
+			<p>{{comment.creationDate | date('d/m/y H:i')}}</p>
+		{% endif %}
 	{% endfor %}
 
 {% endblock %}

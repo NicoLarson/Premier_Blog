@@ -125,13 +125,10 @@ class BlogController extends AbstractController
     #[Route('/updateArticle/{id}', name: 'updateArticle')]
     public function updateArticle($id, Request $request, EntityManagerInterface $manager)
     {
-        $form = $this->createForm(ArticleCreateType::class);
-        $form->handleRequest($request);
 
         $entityManager = $this->getDoctrine()->getManager();
         $article = $entityManager->getRepository(Article::class)->find($id);
 
-        $members = $entityManager->getRepository(Account::class)->findAll();
         $currentUser = $this->getUser();
 
         if (!$currentUser instanceof Account || ($article->getAuthor()->getId() !== $currentUser->getId() && $this->isGranted(['ROLE_ADMIN']))) {
@@ -139,12 +136,24 @@ class BlogController extends AbstractController
         }
 
         if (!$article) {
-            throw $this->createNotFoundException('No article found for id '.$id);
+            throw $this->createNotFoundException('No article found for id ' . $id);
         }
 
+        $articleDTO = new InputArticle;
+
+        $articleDTO->title = $article->getTitle();
+        $articleDTO->capon = $article->getCapon();
+        $articleDTO->content = $article->getContent();
+        $articleDTO->authorId = $article->getAuthor()->getId();
+
+        $form = $this->createForm(ArticleCreateType::class, $articleDTO);
+        $form->handleRequest($request);
+
+        $members = $entityManager->getRepository(Account::class)->findAll();
+
+
+
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var InputArticle $articleDTO */
-            $articleDTO = $form->getData();
             $author = $entityManager->getRepository(Account::class)->find($articleDTO->authorId);
             $article->setTitle($articleDTO->title)
                 ->setCapon($articleDTO->capon)

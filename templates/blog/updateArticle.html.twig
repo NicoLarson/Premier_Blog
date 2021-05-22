@@ -7,31 +7,31 @@
 	{{ form_start(form) }}
 
 	<fieldset>
-		<legend>Modifier
-			{{article.title}}</legend>
+		<legend>Modifier {{article.title}}</legend>
 
-		{{ form_row(form.title, {
-         'label': 'Titre de l\'article',
-         'attr': {
-           'value':(article.title)
-    }
-    }) }}
+		{{
+        form_row(form.title, {
+            'label': 'Titre de l\'article'
+        })
+    }}
 
-		{{ form_row(form.capon, {
-        'label': 'Chapon',
-        'attr': {
-          'value':(article.capon)
-    }}) }}
+    {{
+        form_row(form.capon, {
+            'label': 'Chapon'
+        })
+    }}
 
-		{{ form_row(form.content, {
-        'label': 'Contenu de l\'article',
-        'attr':{
-          'value':(article.content)
-    }}) }}
+    {{
+        form_row(form.content, {
+            'label': 'Contenu de l\'article'
+        })
+    }}
 
-		{{ form_row(form.authorId, {
-        'label': 'Auteurs'
-       }) }}
+		{{
+        form_row(form.authorId, {
+            'label': 'Auteurs'
+        })
+    }}
 
 
 		<button class="btn btn-primary" type="submit">

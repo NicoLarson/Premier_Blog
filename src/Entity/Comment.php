@@ -27,7 +27,7 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false,             onDelete="CASCADE")
      */
     private Article $article;
 

@@ -24,7 +24,9 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var AccountCreate $accountDTO */
+            /**
+             * @var AccountCreate $accountDTO
+             */
             $accountDTO = $form->getData();
             $account = new Account($accountDTO->email, $accountDTO->username, $accountDTO->password);
             $hash = $encoder->encodePassword($account, $account->getPassword());
@@ -35,9 +37,11 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/signin.html.twig', [
+        return $this->render(
+            'security/signin.html.twig', [
             'form' => $form->createView(),
-        ]);
+            ]
+        );
     }
 
     /**

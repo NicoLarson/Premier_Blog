@@ -29,9 +29,11 @@ class BlogController extends AbstractController
     #[Route('/', name: 'blog')]
     public function index(): Response
     {
-        return $this->render('blog/index.html.twig', [
+        return $this->render(
+            'blog/index.html.twig', [
             'controller_name' => 'BlogController',
-        ]);
+            ]
+        );
     }
 
     #[Route('/home', name: 'home')]
@@ -47,12 +49,16 @@ class BlogController extends AbstractController
                 ->to('contact@nicolasyang.fr')
                 ->subject('Message du blog!')
                 ->text($formData->message)
-                ->html($this->renderView('mails/contactMe.html.twig', [
-                    'lastName' => $formData->lastName,
-                    'firstName' => $formData->firstName,
-                    'email' => $formData->email,
-                    'message' => $formData->message,
-                ]));
+                ->html(
+                    $this->renderView(
+                        'mails/contactMe.html.twig', [
+                        'lastName' => $formData->lastName,
+                        'firstName' => $formData->firstName,
+                        'email' => $formData->email,
+                        'message' => $formData->message,
+                        ]
+                    )
+                );
 
             $mailer->send($email);
 
@@ -61,17 +67,21 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('blog/home.html.twig', [
+        return $this->render(
+            'blog/home.html.twig', [
             'form' => $form->createView(),
-        ]);
+            ]
+        );
     }
 
     #[Route('/showArticles', name: 'showArticles')]
     public function showArticles(ArticleRepository $articleRepository)
     {
-        return $this->render('blog/articlesList.html.twig', [
+        return $this->render(
+            'blog/articlesList.html.twig', [
             'articles' => $articleRepository->findBy([], ['lastUpdateDate' => 'DESC']),
-        ]);
+            ]
+        );
     }
 
     #[Route('/create-article', name: 'createArticle')]
@@ -86,7 +96,9 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var InputArticle $articleDTO */
+            /**
+             * @var InputArticle $articleDTO
+             */
             $articleDTO = $form->getData();
             $article = new Article($articleDTO->title, $articleDTO->capon, $articleDTO->content, $this->getUser());
             $manager->persist($article);
@@ -97,9 +109,11 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('showArticles');
         }
 
-        return $this->render('blog/articleCreate.html.twig', [
+        return $this->render(
+            'blog/articleCreate.html.twig', [
             'form' => $form->createView(),
-        ]);
+            ]
+        );
     }
 
     #[Route('/deleteArticle/{id}', name: 'deleteArticle')]
@@ -125,7 +139,6 @@ class BlogController extends AbstractController
     #[Route('/updateArticle/{id}', name: 'updateArticle')]
     public function updateArticle($id, Request $request, EntityManagerInterface $manager)
     {
-
         $entityManager = $this->getDoctrine()->getManager();
         $article = $entityManager->getRepository(Article::class)->find($id);
 
@@ -136,10 +149,10 @@ class BlogController extends AbstractController
         }
 
         if (!$article) {
-            throw $this->createNotFoundException('No article found for id ' . $id);
+            throw $this->createNotFoundException('No article found for id '.$id);
         }
 
-        $articleDTO = new InputArticle;
+        $articleDTO = new InputArticle();
 
         $articleDTO->title = $article->getTitle();
         $articleDTO->capon = $article->getCapon();
@@ -150,8 +163,6 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
 
         $members = $entityManager->getRepository(Account::class)->findAll();
-
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $author = $entityManager->getRepository(Account::class)->find($articleDTO->authorId);
@@ -165,11 +176,13 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('showPost', ['id' => $id]);
         }
 
-        return $this->render('blog/updateArticle.html.twig', [
+        return $this->render(
+            'blog/updateArticle.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
             'members' => $members,
-        ]);
+            ]
+        );
     }
 
     #[Route('/show-post/{id}', name: 'showPost')]
@@ -187,7 +200,9 @@ class BlogController extends AbstractController
             $form = $this->createForm(CommentMembersType::class);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                /** @var CommentMembersCreate $commentDTO */
+                /**
+                 * @var CommentMembersCreate $commentDTO
+                 */
                 $commentDTO = $form->getData();
                 $author = new AuthenticateAuthor($this->getUser());
                 $comment = new Comment($article, $author, $commentDTO->content);
@@ -198,17 +213,21 @@ class BlogController extends AbstractController
                 return $this->redirectToRoute('showPost', ['id' => $id]);
             }
 
-            return $this->render('blog/showPostMembers.html.twig', [
+            return $this->render(
+                'blog/showPostMembers.html.twig', [
                 'article' => $article,
                 'form' => $form->createView(),
                 'id' => $id,
                 'currentUserIsAuthor' => $currentUserIsAuthor,
-            ]);
+                ]
+            );
         }
         $form = $this->createForm(CommentAnonymousType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var CommentAnonymousCreate $commentDTO */
+            /**
+             * @var CommentAnonymousCreate $commentDTO
+             */
             $commentDTO = $form->getData();
             $author = new AnonymousAuthor($commentDTO->username, $commentDTO->email);
             $comment = new Comment($article, $author, $commentDTO->content);
@@ -218,9 +237,11 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('showPost', ['id' => $id]);
         }
 
-        return $this->render('blog/showPostAnonymous.html.twig', [
+        return $this->render(
+            'blog/showPostAnonymous.html.twig', [
             'article' => $article,
             'form' => $form->createView(),
-        ]);
+            ]
+        );
     }
 }

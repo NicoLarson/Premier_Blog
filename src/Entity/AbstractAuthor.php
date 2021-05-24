@@ -23,7 +23,7 @@ abstract class AbstractAuthor
 
     /**
      * @ORM\OneToOne(targetEntity=Comment::class, inversedBy="author")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false,            onDelete="CASCADE")
      */
     private Comment $comment;
 

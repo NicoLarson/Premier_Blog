@@ -23,35 +23,19 @@
 	{% endblock %}
 </head>
 
-<body>
-	<header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="/home"> <img src="./asset/img/logo_bw.jpg" alt="logo">NYBlog</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
-					aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarColor03">
-					<ul class="navbar-nav me-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="/home">Home
-								<span class="sr-only">(current)</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/signin">S'enrengister</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/login">Connection</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/create-article">Écrire un article</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/showArticles">Tous les articles</a>
-						</li>
+					{% block body %}{% endblock %}
+				</div>
+			</main>
+			<footer>
+				<section>
+					<h3>Plan du site</h3>
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li><a href="/signin">S'enrengister</a></li>
+						<li><a href="/login">Connection</a></li>
+						<li><a href="/create-article">Écrire un article</a></li>
+						<li><a href="/show-articles">Tous les articles</a></li>
+						<li><a href="/administration">Page administration</a></li>
 					</ul>
 
 				</div>

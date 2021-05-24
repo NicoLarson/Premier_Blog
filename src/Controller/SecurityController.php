@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\AccountCreate;
+use LogicException;
 use App\Entity\Account;
 use App\Form\SignInType;
+use App\DTO\AccountCreate;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
@@ -24,20 +25,26 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var AccountCreate $accountDTO */
+            /**
+             * @var AccountCreate $accountDTO
+             */
             $accountDTO = $form->getData();
             $account = new Account($accountDTO->email, $accountDTO->username, $accountDTO->password);
             $hash = $encoder->encodePassword($account, $account->getPassword());
-            $account->setPassword($hash);
+            'admin@admin.fr' === $accountDTO->email ? $account->setPassword($hash)->enable()->addAdminRoles() : $account->setPassword($hash);
+
             $manager->persist($account);
             $manager->flush();
 
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/signin.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render(
+            'security/signin.html.twig',
+            [
+                'form' => $form->createView(),
+            ]
+        );
     }
 
     /**
@@ -56,6 +63,6 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

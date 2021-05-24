@@ -29,12 +29,14 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('blog/adminPage.html.twig', [
+        return $this->render(
+            'blog/adminPage.html.twig', [
             'articles' => $articles,
             'members' => $members,
             'comments' => $comments,
             'anonymousCommentAuthor' => $anonymousCommentAuthor,
-        ]);
+            ]
+        );
     }
 
     #[Route('/inscription-validation/{id}', name: 'inscriptionValidation')]

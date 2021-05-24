@@ -28,16 +28,20 @@ class ArticleCreateType extends AbstractType
             ->add('title')
             ->add('capon')
             ->add('content', TextareaType::class)
-            ->add('authorId', ChoiceType::class, [
+            ->add(
+                'authorId', ChoiceType::class, [
                 'choices' => $this->buildChoiceAuthor(),
-            ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => InputArticle::class,
-        ]);
+            ]
+        );
     }
 
     private function buildChoiceAuthor(): array

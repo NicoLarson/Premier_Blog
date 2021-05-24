@@ -19,15 +19,19 @@ class SignInType extends AbstractType
         $builder
             ->add('email', EmailType::class)
             ->add('username')
-            ->add('password', RepeatedType::class, [
+            ->add(
+                'password', RepeatedType::class, [
                 'type' => PasswordType::class,
-            ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => AccountCreate::class,
-        ]);
+            ]
+        );
     }
 }

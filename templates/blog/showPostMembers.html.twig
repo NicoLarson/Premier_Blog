@@ -15,11 +15,16 @@
 	<fieldset>
 		<legend>Commenter</legend>
 
-		{{ form_row(form.content, {
-	'label': 'Commentaire',
-	'attr':{
-	'placeholder':'Commentaire'
-	}}) }}
+	{{ 
+		form_row(form.content, 
+		{
+			'label': 'Commentaire',
+			'attr':
+			{
+				'placeholder':'Commentaire'
+			}
+		})
+	}}
 		<button class="btn btn-primary" type="submit">
 			Commenter</button>
 	</fieldset>

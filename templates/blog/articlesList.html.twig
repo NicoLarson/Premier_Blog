@@ -5,7 +5,7 @@
 
 {% block body %}
 
-	<section class="articles">
+	<div class="articles">
 		{% for article in articles %}
 			<article>
 				<h2>{{article.title}}</h2>
@@ -23,11 +23,11 @@
 						{{article.lastUpdateDate | date('H:i')}}
 					{% endif %}
 					par
-				{{article.author}}
+					{{article.author}}
 				</p>
 				<a href="{{ path("showPost", {'id':article.id}) }}" class="btn btn-primary">Lire l'article</a>
 			</article>
 		{% endfor %}
-	</section>
+	</div>
 
 {% endblock %}

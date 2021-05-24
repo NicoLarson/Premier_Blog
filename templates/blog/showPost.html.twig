@@ -29,12 +29,14 @@
 	</section>
 	{% block formBlock %}{% endblock %}
 
+	<section class="container">
 	{% for comment in article.comments %}
 		{% if comment.enabled == true %}
-			<h4>{{comment.author}}</h4>
+			<h5>{{comment.author}}</h5>
 			<p>{{comment.content}}</p>
 			<p>{{comment.creationDate | date('d/m/y H:i')}}</p>
 		{% endif %}
 	{% endfor %}
+	</section>
 
 {% endblock %}

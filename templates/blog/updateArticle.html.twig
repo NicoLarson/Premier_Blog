@@ -7,11 +7,14 @@
 	{{ form_start(form) }}
 
 	<fieldset>
-		<legend>Modifier {{article.title}}</legend>
+		<legend>
+			Modifier
+			{{article.title}}
+		</legend>
 
 		{{
-        form_row(form.title, {
-            'label': 'Titre de l\'article'
+    form_row(form.title, {
+        'label': 'Titre de l\'article'
         })
     }}
 
